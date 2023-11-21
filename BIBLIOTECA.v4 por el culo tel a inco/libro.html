@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Biblioteca</title>
+
+    <a class="user-buttons track iz"  data-track-value="Click" href="htmlregistro.html" title="Regístrate" > Inicio y Registro </a>
+    <style>
+        body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-start;
+   
+    background-color: #fff; /* Cambiado a blanco */
+}
+
+.user-buttons {
+    display: block;
+    text-align: center;
+    padding: 10px 20px;
+    background-color: #fff; /* Cambiado a blanco */
+    color: #000; /* Cambiado a negro */
+    text-decoration: none;
+    border-radius: 5px;
+    margin: 10px; /* Añadido un pequeño espacio alrededor del botón */
+}
+    </style>
+
+    <style>
+        /* Estilos generales */
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url(fondo.jpg);/* Color de fondo */
+            background-position: center center;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100svh;
+        }
+
+        .container {
+            background-color: #ff9494;
+            border-radius: 8px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+        }
+
+        /* Estilos para la lista de libros */
+        .lista-libros {
+            display: flex;
+            background-color: #ff9494; 
+            flex-wrap: wrap;
+            gap: 20px; /* Espacio entre libros */
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        /* Estilos para cada libro */
+        .libro {
+            width: 200px;
+            border: 1px solid #ffffff00;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            background-color: #b6dcff;
+            transition: transform 0.2s; /* Efecto de transformación al pasar el mouse */
+        }
+
+        .libro:hover {
+            transform: scale(1.05); /* Efecto de aumento al pasar el mouse */
+        }
+
+        .libro img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .libro h2 {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            color: #150022; /* Color de título */
+        }
+
+        .libro p {
+            font-size: 1em;
+            margin: 0;
+            color: #666; /* Color de texto */
+        }
+
+        /* Estilos para el título principal */
+        h1 {
+            color: #333; /* Color del título principal */
+            background-color: #b6dcff; 
+            border-radius: 8px;
+        }    
+
+        .iz {
+            position: fixed;
+    top: 10px;
+    right: 10px;
+    padding: 10px 20px;
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer
+        }
+        /* Estilos para botones */
+        .boton {
+            background-color: #4c729c; /* Color de fondo del botón */
+            color: #fff; /* Color del texto del botón */
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            margin: 10px;
+            cursor: pointer;
+        }
+
+
+        /* Estilos para el buscador */
+        #buscador {
+            width: 100%;
+            padding: 5px;
+            margin-bottom: 10px;
+        }
+
+        /* Estilos para el registro de préstamo */
+        .registro-prestamo {
+            font-size: 0.9em;
+            margin-top: 10px;
+            text-align: left;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Mi Biblioteca</h1>
+        <div>
+            <button class="boton" onclick="agregarLibro()">Agregar Libro</button>
+            <button class="boton" onclick="modificarLibro()">Modificar Libro</button>
+            <button class="boton" onclick="leerLibro()">Marcar como Leído</button>
+            <button class="boton" onclick="eliminarLibro()">Eliminar Libro</button>
+        </div>
+        <input type="text" id="buscador" placeholder="Buscar por título, autor o género" onkeyup="buscarLibro()">
+        <p id="contadorLibros">Total de libros: 0</p>
+        <div class="lista-libros" id="listaLibros">
+            <!-- Los libros se mostrarán aquí -->
+        </div>
+        
+        <div>
+            <button class="boton" onclick="paginaAnterior()">Anterior</button>
+            <button class="boton" onclick="paginaSiguiente()">Siguiente</button>
+        </div>
+        <div class="registro-prestamo" id="registroPrestamo">
+            <!-- El registro de préstamo aparecerá aquí -->
+        </div>
+    </div>
+    <script>
+        // Datos de prueba para simular una biblioteca
+        var biblioteca = [
+            {titulo: "Todo es Cuestion de Quimica", autor: "Deborah Garcia Bello", genero: "Educacion", imagen: "imagne/ciencia.jpg", prestamo: null, existencia:5},
+            {titulo: "Sexo la Novela", autor: "Floppa escritor", genero: "Ciencia Ficción", imagen: "imagne/floppa.jpg", prestamo: null},
+            {titulo: "Matematicas", autor: "Carlos Bosch", genero: "Educacion", imagen: "imagne/mate.jpg", prestamo: null},
+            {titulo: "Libro de pluton", autor: "Dross", genero: "Ciencia Ficción", imagen: "imagne/pluton.jpg", prestamo: null},
+            {titulo: "Rauðskinna", autor: "Gottskálk grimmi Nikulásson de Hólar", genero: "Terror", imagen: "imagne/Rauðskinna.jpg", prestamo: null},
+            {titulo: "Manifiesto del Partido Comunista", autor: "Karl Marx, Friedrich Engels", genero: "Política", imagen: "imagne/xd.jpg", prestamo: null},
+        ];
+
+        // Variables para paginación
+        var librosPorPagina = 6;
+        var paginaActual = 1;
+
+        // Función para mostrar libros en la página
+        function mostrarLibros() {
+            var listaLibros = document.getElementById('listaLibros');
+            listaLibros.innerHTML = '';
+
+            var inicio = (paginaActual - 1) * librosPorPagina;
+            var fin = inicio + librosPorPagina;
+
+            var librosMostrados = biblioteca.slice(inicio, fin);
+
+            librosMostrados.forEach(function(libro, index) {
+                var libroDiv = document.createElement('div');
+                libroDiv.classList.add('libro');
+
+                // Agregar campo de existencia
+                var existencia = document.createElement('p');
+                existencia.textContent = `En existencia: ${libro.existencia}`;
+                libroDiv.appendChild(existencia);
+                
+
+                // Crear un enlace <a> para el detalle del libro
+                var enlaceDetalle = document.createElement('a');
+                enlaceDetalle.href = `detalle_libro.html?titulo=${encodeURIComponent(libro.titulo)}&autor=${encodeURIComponent(libro.autor)}&genero=${encodeURIComponent(libro.genero)}`;
+                enlaceDetalle.target = '_blank';
+
+                // Crear una imagen para el libro
+                var imagen = document.createElement('img');
+                imagen.src = libro.imagen;
+                imagen.alt = `Portada de ${libro.titulo}`;
+                enlaceDetalle.appendChild(imagen);
+                libroDiv.appendChild(enlaceDetalle);
+
+                // Agregar título y autor
+                var titulo = document.createElement('h2');
+                titulo.textContent = libro.titulo;
+                libroDiv.appendChild(titulo);
+
+                var autor = document.createElement('p');
+                autor.textContent = libro.autor;
+                libroDiv.appendChild(autor);
+
+                // Agregar botón de préstamo
+                var botonPrestamo = document.createElement('button');
+                botonPrestamo.textContent = 'Préstamo';
+                botonPrestamo.classList.add('boton');
+                botonPrestamo.onclick = function() {
+                    prestarLibro(libro);
+                };
+                libroDiv.appendChild(botonPrestamo);
+
+                listaLibros.appendChild(libroDiv);
+            });
+        }
+
+        // Función para buscar libros por título, autor o género
+        function buscarLibro() {
+            var textoBusqueda = document.getElementById('buscador').value.toLowerCase();
+
+            var librosFiltrados = biblioteca.filter(function(libro) {
+                return libro.titulo.toLowerCase().includes(textoBusqueda) ||
+                    libro.autor.toLowerCase().includes(textoBusqueda) ||
+                    libro.genero.toLowerCase().includes(textoBusqueda);
+            });
+
+            var listaLibros = document.getElementById('listaLibros');
+            listaLibros.innerHTML = '';
+
+            librosFiltrados.forEach(function(libro) {
+                var libroDiv = document.createElement('div');
+                libroDiv.classList.add('libro');
+
+                // Agregar campo de existencia
+                var existencia = document.createElement('p');
+                existencia.textContent = `En existencia: ${libro.existencia}`;
+                libroDiv.appendChild(existencia);
+
+                // Crear un enlace <a> para el detalle del libro
+                var enlaceDetalle = document.createElement('a');
+                enlaceDetalle.href = `detalle_libro.html?titulo=${encodeURIComponent(libro.titulo)}&autor=${encodeURIComponent(libro.autor)}&genero=${encodeURIComponent(libro.genero)}`;
+                enlaceDetalle.target = '_blank';
+
+                // Crear una imagen para el libro
+                var imagen = document.createElement('img');
+                imagen.src = libro.imagen;
+                imagen.alt = `Portada de ${libro.titulo}`;
+                enlaceDetalle.appendChild(imagen);
+                libroDiv.appendChild(enlaceDetalle);
+
+                // Agregar título y autor
+                var titulo = document.createElement('h2');
+                titulo.textContent = libro.titulo;
+                libroDiv.appendChild(titulo);
+
+                var autor = document.createElement('p');
+                autor.textContent = libro.autor;
+                libroDiv.appendChild(autor);
+
+                // Agregar botón de préstamo
+                var botonPrestamo = document.createElement('button');
+                botonPrestamo.textContent = 'Préstamo';
+                botonPrestamo.classList.add('boton');
+                botonPrestamo.onclick = function() {
+                    prestarLibro(libro);
+                };
+                libroDiv.appendChild(botonPrestamo);
+
+                listaLibros.appendChild(libroDiv);
+            });
+        }
+
+        // Función para contar los libros y actualizar el contador
+        function contarLibros() {
+            var contador = document.getElementById('contadorLibros');
+            contador.textContent = 'Total de libros: ' + biblioteca.length;
+        }
+
+        // Función para agregar un libro
+        function agregarLibro() {
+            var titulo = prompt('Ingrese el título del libro:');
+            var autor = prompt('Ingrese el autor del libro:');
+            var genero = prompt('Ingrese el género del libro:');
+            var imagen = prompt('Ingrese la URL de la imagen del libro:');
+            var existencia = prompt('Ingrese la cantidad de libros en existencia:');
+
+            // Verificar si se proporcionó la cantidad de libros en existencia
+            if (isNaN(existencia)) {
+                alert('La cantidad de libros en existencia debe ser un número.');
+                return;
+            }
+
+            var nuevoLibro = {
+                titulo: titulo,
+                autor: autor,
+                genero: genero,
+                imagen: imagen,
+                prestamo: null,
+                existencia: parseInt(existencia) // Convertir a número entero
+            };
+
+            biblioteca.push(nuevoLibro);
+            mostrarLibros();
+            contarLibros(); // Actualizamos el contador de libros
+        }
+
+        // Función para prestar un libro
+        function prestarLibro(libro) {
+            if (libro.existencia > 0) {
+                var nombrePrestatario = prompt('Ingrese el nombre del prestatario:');
+                if (nombrePrestatario) {
+                    libro.prestamo = nombrePrestatario;
+                    libro.existencia--;
+                    mostrarLibros();
+                }
+            } else {
+                alert('No hay ejemplares disponibles para préstamo.');
+            }
+        }
+
+        // Función para devolver un libro
+        function devolverLibro(libro) {
+            libro.prestamo = null;
+            libro.existencia++;
+            mostrarLibros();
+        }
+
+        // Función para mostrar la página anterior
+        function paginaAnterior() {
+            if (paginaActual > 1) {
+                paginaActual--;
+                mostrarLibros();
+            }
+        }
+
+        // Función para mostrar la página siguiente
+        function paginaSiguiente() {
+            var totalPaginas = Math.ceil(biblioteca.length / librosPorPagina);
+            if (paginaActual < totalPaginas) {
+                paginaActual++;
+                mostrarLibros();
+            }
+        }
+
+        // Función para modificar un libro
+        function modificarLibro() {
+            var tituloBusqueda = prompt('Ingrese el título del libro que desea modificar:');
+            var autorBusqueda = prompt('Ingrese el autor del libro que desea modificar:');
+            var libroEncontrado = null;
+
+            for (var i = 0; i < biblioteca.length; i++) {
+                if (biblioteca[i].titulo === tituloBusqueda && biblioteca[i].autor === autorBusqueda) {
+                    libroEncontrado = biblioteca[i];
+                    break;
+                }
+            }
+
+            if (libroEncontrado === null) {
+                alert('Libro no encontrado.');
+                return;
+            }
+
+            var nuevoTitulo = prompt('Ingrese el nuevo título (o deje en blanco para mantener el actual):');
+            var nuevoAutor = prompt('Ingrese el nuevo autor (o deje en blanco para mantener el actual):');
+            var nuevoGenero = prompt('Ingrese el nuevo género (o deje en blanco para mantener el actual):');
+            var nuevaImagen = prompt('Ingrese la nueva URL de la imagen (o deje en blanco para mantener la actual):');
+
+            if (nuevoTitulo) {
+                libroEncontrado.titulo = nuevoTitulo;
+            }
+            if (nuevoAutor) {
+                libroEncontrado.autor = nuevoAutor;
+            }
+            if (nuevoGenero) {
+                libroEncontrado.genero = nuevoGenero;
+            }
+            if (nuevaImagen) {
+                libroEncontrado.imagen = nuevaImagen;
+            }
+
+            mostrarLibros();
+        }
+
+        // Función para marcar un libro como leído
+        function leerLibro() {
+            var tituloBusqueda = prompt('Ingrese el título del libro que desea marcar como leído:');
+            var autorBusqueda = prompt('Ingrese el autor del libro que desea marcar como leído:');
+            var libroEncontrado = null;
+
+            for (var i = 0; i < biblioteca.length; i++) {
+                if (biblioteca[i].titulo === tituloBusqueda && biblioteca[i].autor === autorBusqueda) {
+                    libroEncontrado = biblioteca[i];
+                    break;
+                }
+            }
+
+            if (libroEncontrado === null) {
+                alert('Libro no encontrado.');
+                return;
+            }
+
+            if (libroEncontrado.prestamo === null) {
+                alert('El libro no está prestado.');
+                return;
+            }
+
+            var confirmacion = confirm(`¿Desea marcar como leído el libro "${libroEncontrado.titulo}" prestado a ${libroEncontrado.prestamo}?`);
+
+            if (confirmacion) {
+                devolverLibro(libroEncontrado);
+            }
+        }
+
+        // Función para eliminar un libro
+        function eliminarLibro() {
+            var tituloBusqueda = prompt('Ingrese el título del libro que desea eliminar:');
+            var autorBusqueda = prompt('Ingrese el autor del libro que desea eliminar:');
+            var libroEncontrado = null;
+
+            for (var i = 0; i < biblioteca.length; i++) {
+                if (biblioteca[i].titulo === tituloBusqueda && biblioteca[i].autor === autorBusqueda) {
+                    libroEncontrado = biblioteca[i];
+                    break;
+                }
+            }
+
+            if (libroEncontrado === null) {
+                alert('Libro no encontrado.');
+                return;
+            }
+
+            var confirmacion = confirm(`¿Desea eliminar el libro "${libroEncontrado.titulo}" de la biblioteca?`);
+
+            if (confirmacion) {
+                var indice = biblioteca.indexOf(libroEncontrado);
+                biblioteca.splice(indice, 1);
+                mostrarLibros();
+                contarLibros(); // Actualizamos el contador de libros
+            }
+        }
+
+        // Función para inicializar la página
+        function inicializarPagina() {
+            mostrarLibros();
+            contarLibros();
+        }
+
+        // Llamada a la función de inicialización
+        inicializarPagina();
+    </script>
+</body>
+
+</html>

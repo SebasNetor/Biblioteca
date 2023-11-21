@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="styles.css">
+<title>Registro</title>
+<style>
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f0f0f0;
+}
+
+.register-container {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
+  padding: 30px;
+  width: 400px;
+  text-align: center;
+}
+
+.register-container h2 {
+  color: #333333;
+  margin-bottom: 20px;
+}
+
+.register-form input {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+}
+
+.register-form button {
+  background-color: #007bff;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  padding: 12px;
+  cursor: pointer;
+  width: 100%;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.register-form button:hover {
+  background-color: #0056b3;
+}
+
+.register-container p {
+  margin-top: 10px;
+}
+
+</style>
+</head>
+<body>
+  <div class="register-container">
+      <h2>Registro</h2>
+      <form class="register-form" method="post" action="conexion.php">
+          <input type="text" name="nombre_usuario" placeholder="nombre de usuario" required>
+          <input type="password" name="contrasena" placeholder="contraseña" required>
+          <button type="submit">Registrarse</button>
+      </form>
+      <p>¿Ya tienes una cuenta? <a href="htmllogin.html">Inicia sesión</a></p>
+  </div>
+</body>
+</html>
